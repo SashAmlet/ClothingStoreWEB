@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStore.Context;
-using ClothingStore.Models.AuxiliaryModels;
+using ClothingStoreWEB.Context;
+using ClothingStoreWEB.Models.AuxiliaryModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingStoreWEB.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class DeliveriesController : Controller
     {
         private readonly MainContext _context;
@@ -24,7 +26,7 @@ namespace ClothingStoreWEB.Controllers
         {
               return _context.DeliveryMethods != null ? 
                           View(await _context.DeliveryMethods.ToListAsync()) :
-                          Problem("Entity set 'MainContext.DeliveryMethods'  is null.");
+                          Problem("Entity set 'IdentityContext.DeliveryMethods'  is null.");
         }
 
         // GET: Deliveries/Details/5
@@ -143,7 +145,7 @@ namespace ClothingStoreWEB.Controllers
         {
             if (_context.DeliveryMethods == null)
             {
-                return Problem("Entity set 'MainContext.DeliveryMethods'  is null.");
+                return Problem("Entity set 'IdentityContext.DeliveryMethods'  is null.");
             }
             var delivery = await _context.DeliveryMethods.FindAsync(id);
             if (delivery != null)

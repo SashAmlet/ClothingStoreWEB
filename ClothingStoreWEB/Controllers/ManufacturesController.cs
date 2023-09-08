@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStore.Context;
-using ClothingStore.Models;
+using ClothingStoreWEB.Context;
+using ClothingStoreWEB.Models;
 
 namespace ClothingStoreWEB.Controllers
 {
@@ -24,7 +24,7 @@ namespace ClothingStoreWEB.Controllers
         {
               return _context.Manufactures != null ? 
                           View(await _context.Manufactures.ToListAsync()) :
-                          Problem("Entity set 'MainContext.Manufactures'  is null.");
+                          Problem("Entity set 'IdentityContext.Manufactures'  is null.");
         }
 
         // GET: Manufactures/Details/5
@@ -143,7 +143,7 @@ namespace ClothingStoreWEB.Controllers
         {
             if (_context.Manufactures == null)
             {
-                return Problem("Entity set 'MainContext.Manufactures'  is null.");
+                return Problem("Entity set 'IdentityContext.Manufactures'  is null.");
             }
             var manufacture = await _context.Manufactures.FindAsync(id);
             if (manufacture != null)

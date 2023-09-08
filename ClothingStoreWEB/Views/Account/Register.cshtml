@@ -1,0 +1,35 @@
+﻿@model ClothingStoreWEB.ViewModel.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<link rel="stylesheet" href="~/css/RegForm.css" />
+<body>
+    <form method="post" asp-controller="Account" asp-action="Register">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <h2>New User Registration</h2>
+        <label asp-for="FName"></label><br />
+        <input asp-for="FName" class="form-control" />
+        <span asp-validation-for="FName"></span>
+
+        <label asp-for="LName"></label><br />
+        <input asp-for="LName" class="form-control" />
+        <span asp-validation-for="LName"></span>
+
+        <label asp-for="Email"></label><br />
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email"></span>
+
+        <label asp-for="Password"></label><br />
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password"></span>
+
+        <label asp-for="PasswordConfirm"></label><br />
+        <input asp-for="PasswordConfirm" class="form-control" />
+        <span asp-validation-for="PasswordConfirm"></span>
+
+        <input type="submit" value="Register" class="btn btn-primary">
+    </form>
+</body>

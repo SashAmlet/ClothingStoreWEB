@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStore.Context;
-using ClothingStore.Models;
+using ClothingStoreWEB.Context;
+using ClothingStoreWEB.Models;
 
 namespace ClothingStoreWEB.Controllers
 {
@@ -22,8 +22,8 @@ namespace ClothingStoreWEB.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            var mainContext = _context.Items.Include(i => i.Category).Include(i => i.Manufacture);
-            return View(await mainContext.ToListAsync());
+            var IdentityContext = _context.Items.Include(i => i.Category).Include(i => i.Manufacture);
+            return View(await IdentityContext.ToListAsync());
         }
 
         // GET: Items/Details/5
@@ -154,7 +154,7 @@ namespace ClothingStoreWEB.Controllers
         {
             if (_context.Items == null)
             {
-                return Problem("Entity set 'MainContext.Items'  is null.");
+                return Problem("Entity set 'IdentityContext.Items'  is null.");
             }
             var item = await _context.Items.FindAsync(id);
             if (item != null)

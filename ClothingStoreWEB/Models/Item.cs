@@ -1,6 +1,6 @@
-﻿using ClothingStore.Models.AuxiliaryModels;
+﻿using ClothingStoreWEB.Models.AuxiliaryModels;
 
-namespace ClothingStore.Models
+namespace ClothingStoreWEB.Models
 {
     public class Item
     {

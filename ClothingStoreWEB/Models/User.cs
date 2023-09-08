@@ -1,13 +1,13 @@
-﻿namespace ClothingStore.Models
+﻿using ClothingStoreWEB.Models;
+using Microsoft.AspNetCore.Identity;
+
+namespace ClothingStoreWEB.Models
 {
-    public class User
+    public class User: IdentityUser
     {
-        public int Id { get; set; }
         public string FName { get; set; } = null!;
         public string LName { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!; 
-
         public IEnumerable<Order>? Orders { get; set; }
+        public IEnumerable<DeliveryAddress>? DeliveryAddresses { get; set; }
     }
 }

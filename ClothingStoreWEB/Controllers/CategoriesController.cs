@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStore.Context;
-using ClothingStore.Models;
+using ClothingStoreWEB.Context;
+using ClothingStoreWEB.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingStoreWEB.Controllers
 {
@@ -24,7 +25,7 @@ namespace ClothingStoreWEB.Controllers
         {
               return _context.Categories != null ? 
                           View(await _context.Categories.ToListAsync()) :
-                          Problem("Entity set 'MainContext.Categories'  is null.");
+                          Problem("Entity set 'IdentityContext.Categories'  is null.");
         }
 
         // GET: Categories/Details/5
@@ -46,6 +47,7 @@ namespace ClothingStoreWEB.Controllers
         }
 
         // GET: Categories/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();
@@ -56,6 +58,7 @@ namespace ClothingStoreWEB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,ImageUrl")] Category category)
         {
             if (ModelState.IsValid)
@@ -68,6 +71,7 @@ namespace ClothingStoreWEB.Controllers
         }
 
         // GET: Categories/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -88,6 +92,7 @@ namespace ClothingStoreWEB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ImageUrl")] Category category)
         {
             if (id != category.Id)
@@ -119,6 +124,7 @@ namespace ClothingStoreWEB.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -139,11 +145,12 @@ namespace ClothingStoreWEB.Controllers
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Categories == null)
             {
-                return Problem("Entity set 'MainContext.Categories'  is null.");
+                return Problem("Entity set 'IdentityContext.Categories'  is null.");
             }
             var category = await _context.Categories.FindAsync(id);
             if (category != null)

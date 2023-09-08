@@ -1,4 +1,4 @@
-﻿namespace ClothingStore.Models.AuxiliaryModels
+﻿namespace ClothingStoreWEB.Models.AuxiliaryModels
 {
     public class Delivery
     {

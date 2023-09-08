@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStore.Context;
-using ClothingStore.Models.AuxiliaryModels;
+using ClothingStoreWEB.Context;
+using ClothingStoreWEB.Models.AuxiliaryModels;
 
 namespace ClothingStoreWEB.Controllers
 {
@@ -24,7 +24,7 @@ namespace ClothingStoreWEB.Controllers
         {
               return _context.PaymentMethods != null ? 
                           View(await _context.PaymentMethods.ToListAsync()) :
-                          Problem("Entity set 'MainContext.PaymentMethods'  is null.");
+                          Problem("Entity set 'IdentityContext.PaymentMethods'  is null.");
         }
 
         // GET: Payments/Details/5
@@ -143,7 +143,7 @@ namespace ClothingStoreWEB.Controllers
         {
             if (_context.PaymentMethods == null)
             {
-                return Problem("Entity set 'MainContext.PaymentMethods'  is null.");
+                return Problem("Entity set 'IdentityContext.PaymentMethods'  is null.");
             }
             var payment = await _context.PaymentMethods.FindAsync(id);
             if (payment != null)

@@ -1,11 +1,11 @@
-﻿using ClothingStore.Models.AuxiliaryModels;
+﻿using ClothingStoreWEB.Models.AuxiliaryModels;
 
-namespace ClothingStore.Models
+namespace ClothingStoreWEB.Models
 {
     public class Order
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; } = null!;
         public int? StatusId { get; set; }
         public int? PaymentId { get; set; }
         public int? DeliveryId { get; set; }

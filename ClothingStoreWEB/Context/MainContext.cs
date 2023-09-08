@@ -1,26 +1,21 @@
-﻿using System.Data.Common;
-using ClothingStore.Models;
-using ClothingStore.Models.AuxiliaryModels;
+﻿using ClothingStoreWEB.Models;
+using ClothingStoreWEB.Models.AuxiliaryModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClothingStore.Context
+namespace ClothingStoreWEB.Context
 {
-    public class MainContext: DbContext
+    public class MainContext: IdentityDbContext<User>
     {
         public MainContext(DbContextOptions<MainContext> options) : base(options)
         {
             // замість Database.EnsureCreated(); треба спочатку створювати міграцію, а потім прописувати update-database
         }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(x => x.Id);
-
-                entity.Navigation(a => a.Orders).AutoInclude();
-
-            });
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Item>(entity =>
             {
@@ -85,6 +80,15 @@ namespace ClothingStore.Context
 
             });
 
+            modelBuilder.Entity<DeliveryAddress>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+
+                entity.HasOne(p => p.User)
+                    .WithMany(d => d.DeliveryAddresses)
+                    .HasForeignKey(x => x.UserId);
+            });
+
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(a => a.Id);
@@ -106,7 +110,8 @@ namespace ClothingStore.Context
                 entity.HasKey(a => a.Id);
             });
         }
-        public virtual DbSet<User> Users { get; set; }
+/*        public virtual DbSet<User> Users { get; set; }*/
+        public virtual DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<ItemOrder> ItemOrders { get; set; }

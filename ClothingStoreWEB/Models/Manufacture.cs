@@ -1,4 +1,4 @@
-﻿namespace ClothingStore.Models
+﻿namespace ClothingStoreWEB.Models
 {
     public class Manufacture
     {

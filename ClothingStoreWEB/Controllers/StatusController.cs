@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStore.Context;
-using ClothingStore.Models.AuxiliaryModels;
+using ClothingStoreWEB.Context;
+using ClothingStoreWEB.Models.AuxiliaryModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingStoreWEB.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class StatusController : Controller
     {
         private readonly MainContext _context;
@@ -24,7 +26,7 @@ namespace ClothingStoreWEB.Controllers
         {
               return _context.Statuses != null ? 
                           View(await _context.Statuses.ToListAsync()) :
-                          Problem("Entity set 'MainContext.Statuses'  is null.");
+                          Problem("Entity set 'IdentityContext.Statuses'  is null.");
         }
 
         // GET: Status/Details/5
@@ -143,7 +145,7 @@ namespace ClothingStoreWEB.Controllers
         {
             if (_context.Statuses == null)
             {
-                return Problem("Entity set 'MainContext.Statuses'  is null.");
+                return Problem("Entity set 'IdentityContext.Statuses'  is null.");
             }
             var status = await _context.Statuses.FindAsync(id);
             if (status != null)
