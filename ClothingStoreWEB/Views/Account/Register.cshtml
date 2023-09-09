@@ -5,6 +5,7 @@
 }
 
 <link rel="stylesheet" href="~/css/RegForm.css" />
+<script src="https://accounts.google.com/gsi/client" async></script>
 <body>
     <form method="post" asp-controller="Account" asp-action="Register">
         <div asp-validation-summary="ModelOnly"></div>
@@ -31,5 +32,21 @@
         <span asp-validation-for="PasswordConfirm"></span>
 
         <input type="submit" value="Register" class="btn btn-primary">
+        <div id="g_id_onload"
+             data-client_id="992057427521-orm7sac523c110scv90qcls72u40c2if.apps.googleusercontent.com"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-login_uri="https://clothingstoreweb.azurewebsites.net/Account/Login"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="pill"
+             data-theme="outline"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
     </form>
 </body>
