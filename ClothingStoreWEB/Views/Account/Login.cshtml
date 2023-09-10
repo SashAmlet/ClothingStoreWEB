@@ -5,7 +5,7 @@
 }
 
 <link rel="stylesheet" href="~/css/RegForm.css" />
-<script src="https://accounts.google.com/gsi/client" async></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <body>
     <form method="post" asp-controller="Account" asp-action="Login"
         asp-route-returnUrl="@Model.ReturnUrl">
@@ -33,18 +33,50 @@
         <div id="g_id_onload"
              data-client_id="992057427521-orm7sac523c110scv90qcls72u40c2if.apps.googleusercontent.com"
              data-context="signin"
+             data-callback="OnSignIn"
              data-ux_mode="popup"
-             data-login_uri="https://clothingstoreweb.azurewebsites.net/.auth/login/google/callback"
              data-auto_prompt="false">
         </div>
-
         <div class="g_id_signin"
              data-type="standard"
              data-shape="pill"
              data-theme="outline"
              data-text="signin_with"
-             data-size="large"
-             data-logo_alignment="left">
+             data-size="large">
         </div>
+        
     </form>
+    
 </body>
+    
+@section scripts{
+    <script>
+        function OnSignIn(response) {
+            var parts = (response.credential).split('.');
+            var header = JSON.parse(atob(parts[0]));
+            var payload = JSON.parse(atob(parts[1]));
+
+            var user = {
+                Email: payload.email,
+                Password: payload.aud,
+                RememberMe: true,
+                ReturnUrl: null
+            };
+            console.log(JSON.stringify(user));
+            $.ajax({
+                url: '/Account/LoginWithGoogle',
+                type: 'POST',
+                //contentType: 'application/json',
+                data: { json_model: JSON.stringify(user) },
+                success: function () {
+                    // Обробка успішної відповіді
+                    window.location.href = '/Home/Index';
+                },
+                error: function () {
+                    // Обробка помилки
+                    alert('Login failed');
+                }
+            });
+        }
+    </script>
+}

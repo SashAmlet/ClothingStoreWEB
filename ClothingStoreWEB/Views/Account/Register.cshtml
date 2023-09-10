@@ -36,19 +36,50 @@
         <div id="g_id_onload"
              data-client_id="992057427521-orm7sac523c110scv90qcls72u40c2if.apps.googleusercontent.com"
              data-context="signup"
+             data-callback="OnSignUp"
              data-ux_mode="popup"
-             data-login_uri="https://clothingstoreweb.azurewebsites.net/.auth/login/google/callback"
              data-auto_prompt="false">
         </div>
-
         <div class="g_id_signin"
              data-type="standard"
              data-shape="pill"
              data-theme="outline"
              data-text="signup_with"
-             data-size="large"
-             data-logo_alignment="left">
+             data-size="large">
         </div>
-        
     </form>
 </body>
+
+@section scripts{
+    <script>
+        function OnSignUp(response) {
+            console.log(response.credential);
+            var parts = (response.credential).split('.');
+            var header = JSON.parse(atob(parts[0]));
+            var payload = JSON.parse(atob(parts[1]));
+            console.log(payload);
+
+            var user = {
+                Email: payload.email,
+                FName: payload.given_name,
+                LName: payload.family_name,
+                Password: payload.aud,
+                PasswordConfirm: payload.aud
+            };
+
+            $.ajax({
+                url: '/Account/SignUpWithGoogle',
+                type: 'POST',
+                data: { json_model: JSON.stringify(user) },
+                success: function () {
+                    // Обробка успішної відповіді
+                    window.location.href = '/Home/Index';
+                },
+                error: function () {
+                    // Обробка помилки
+                    alert('Sign Up failed');
+                }
+            });
+        }
+    </script>
+}

@@ -3,6 +3,7 @@ using ClothingStoreWEB.Models;
 using ClothingStoreWEB.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Mail;
 
 namespace ClothingStoreWEB.Controllers
@@ -22,9 +23,48 @@ namespace ClothingStoreWEB.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (_userManager.Users.Where(a => a.Email == model.Email).Count() > 0)
+            {
+                ModelState.AddModelError("", "This email address is already registered, try logging in with this email address or enter a different one when registering.");
+            }
+            if (ModelState.IsValid)
+            {
+
+                User user = new User
+                {
+                    Email = model.Email,
+                    UserName = model.Email,
+                    FName = model.FName,
+                    LName = model.LName,
+                    EmailConfirmed = false
+                };
+                var result = await _userManager.CreateAsync(user, model.Password); // закидаємо користувача до бд-шки
+                if (result.Succeeded)
+                {
+                    // установка кукі
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    foreach (var err in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, err.Description);
+                    }
+                }
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUpWithGoogle(string? json_model)
+        {
+            RegisterViewModel? model = JsonConvert.DeserializeObject<RegisterViewModel>(json_model);
             if (_userManager.Users.Where(a => a.Email == model.Email).Count() > 0)
             {
                 ModelState.AddModelError("", "This email address is already registered, try logging in with this email address or enter a different one when registering.");
@@ -70,6 +110,34 @@ namespace ClothingStoreWEB.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
+            {
+                var result =
+                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    // перевіряємо, чи належить URL додатку
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid login and/or password");
+                }
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginWithGoogle(string? json_model)
+        {
+            LoginViewModel? model = JsonConvert.DeserializeObject<LoginViewModel>(json_model);
+            if (model != null)
             {
                 var result =
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
