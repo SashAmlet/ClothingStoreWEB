@@ -25,10 +25,10 @@ namespace ClothingStoreWEB.Controllers.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Item>>> GetItems()
         {
-          if (_context.Items == null)
-          {
-              return NotFound();
-          }
+            if (_context.Items == null)
+            {
+                return NotFound();
+            }
             return await _context.Items.ToListAsync();
         }
 
@@ -36,22 +36,16 @@ namespace ClothingStoreWEB.Controllers.API
         [HttpGet("{id}")]
         public async Task<ActionResult<Item>> GetItem(int id)
         {
-          if (_context.Items == null)
-          {
-              return NotFound();
-          }
-            var item = await _context.Items.FindAsync(id);
-
-            if (item == null)
+            if (_context.Items == null)
             {
                 return NotFound();
             }
+            var item = await _context.Items.FindAsync(id);
 
-            return item;
+            return item != null ? item : NotFound();
         }
 
         // PUT: api/Items/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutItem(int id, Item item)
         {
@@ -66,34 +60,32 @@ namespace ClothingStoreWEB.Controllers.API
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
 
-            return NoContent();
+            return StatusCode(200);
         }
 
         // POST: api/Items
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Item>> PostItem(Item item)
         {
-          if (_context.Items == null)
-          {
-              return Problem("Entity set 'MainContext.Items'  is null.");
-          }
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetItem", new { id = item.Id }, item);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _context.Items.AddAsync(item);
+                    await _context.SaveChangesAsync();
+                    return StatusCode(200);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Items/5
@@ -113,12 +105,7 @@ namespace ClothingStoreWEB.Controllers.API
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool ItemExists(int id)
-        {
-            return (_context.Items?.Any(e => e.Id == id)).GetValueOrDefault();
+            return StatusCode(200);
         }
     }
 }

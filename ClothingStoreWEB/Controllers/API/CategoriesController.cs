@@ -25,10 +25,10 @@ namespace ClothingStoreWEB.Controllers.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-          if (_context.Categories == null)
-          {
-              return NotFound();
-          }
+            if (_context.Categories == null)
+            {
+                return NotFound();
+            }
             return await _context.Categories.ToListAsync();
         }
 
@@ -36,22 +36,16 @@ namespace ClothingStoreWEB.Controllers.API
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-          if (_context.Categories == null)
-          {
-              return NotFound();
-          }
-            var category = await _context.Categories.FindAsync(id);
-
-            if (category == null)
+            if (_context.Categories == null)
             {
                 return NotFound();
             }
+            var category = await _context.Categories.FindAsync(id);
 
-            return category;
+            return category != null ? category : NotFound();
         }
 
         // PUT: api/CategoriesAPI/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
@@ -66,35 +60,35 @@ namespace ClothingStoreWEB.Controllers.API
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
 
-            return NoContent();
+            return StatusCode(200);
         }
 
         // POST: api/CategoriesAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<IActionResult> PostCategory(Category category)
         {
-          if (_context.Categories == null)
-          {
-              return Problem("Entity set 'MainContext.Categories'  is null.");
-          }
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _context.Categories.AddAsync(category);
+                    await _context.SaveChangesAsync();
+                    return StatusCode(200);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
 
         // DELETE: api/CategoriesAPI/5
         [HttpDelete("{id}")]
@@ -113,12 +107,7 @@ namespace ClothingStoreWEB.Controllers.API
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return StatusCode(200);
         }
     }
 }

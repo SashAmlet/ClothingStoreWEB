@@ -36,10 +36,10 @@ namespace ClothingStoreWEB.Controllers.API
         [HttpGet("{id}")]
         public async Task<ActionResult<Manufacture>> GetManufacture(int id)
         {
-          if (_context.Manufactures == null)
-          {
-              return NotFound();
-          }
+            if (_context.Manufactures == null)
+            {
+                return NotFound();
+            }
             var manufacture = await _context.Manufactures.FindAsync(id);
 
             if (manufacture == null)
@@ -66,19 +66,12 @@ namespace ClothingStoreWEB.Controllers.API
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ManufactureExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
 
-            return NoContent();
+            return StatusCode(200);
         }
 
         // POST: api/ManufacturesAPI
@@ -86,14 +79,20 @@ namespace ClothingStoreWEB.Controllers.API
         [HttpPost]
         public async Task<ActionResult<Manufacture>> PostManufacture(Manufacture manufacture)
         {
-          if (_context.Manufactures == null)
-          {
-              return Problem("Entity set 'MainContext.Manufactures'  is null.");
-          }
-            _context.Manufactures.Add(manufacture);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetManufacture", new { id = manufacture.Id }, manufacture);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _context.Manufactures.AddAsync(manufacture);
+                    await _context.SaveChangesAsync();
+                    return StatusCode(200);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/ManufacturesAPI/5
@@ -113,12 +112,7 @@ namespace ClothingStoreWEB.Controllers.API
             _context.Manufactures.Remove(manufacture);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool ManufactureExists(int id)
-        {
-            return (_context.Manufactures?.Any(e => e.Id == id)).GetValueOrDefault();
+            return StatusCode(200);
         }
     }
 }

@@ -22,11 +22,11 @@ namespace ClothingStoreWEB.Context
                 entity.HasKey(x => x.Id);
 
                 entity.HasOne(d => d.Category)
-                    .WithMany(p => p.Items)
+                    .WithMany()
                     .HasForeignKey(a => a.CategoryId)
                     .OnDelete(DeleteBehavior.SetNull);
                 entity.HasOne(d => d.Manufacture)
-                    .WithMany(p => p.Items)
+                    .WithMany()
                     .HasForeignKey(a => a.ManufacturerId)
                     .OnDelete(DeleteBehavior.SetNull);
 
