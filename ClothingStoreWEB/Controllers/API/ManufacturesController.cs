@@ -53,7 +53,7 @@ namespace ClothingStoreWEB.Controllers.API
         // PUT: api/ManufacturesAPI/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutManufacture(int id, Manufacture manufacture)
+        public async Task<ActionResult<Manufacture>> PutManufacture(int id, Manufacture manufacture)
         {
             if (id != manufacture.Id)
             {
@@ -71,7 +71,7 @@ namespace ClothingStoreWEB.Controllers.API
                 return BadRequest(ex.Message);
             }
 
-            return StatusCode(200);
+            return Ok(manufacture);
         }
 
         // POST: api/ManufacturesAPI
@@ -85,7 +85,7 @@ namespace ClothingStoreWEB.Controllers.API
                 {
                     await _context.Manufactures.AddAsync(manufacture);
                     await _context.SaveChangesAsync();
-                    return StatusCode(200);
+                    return Ok(manufacture);
                 }
                 return BadRequest();
             }
@@ -94,6 +94,7 @@ namespace ClothingStoreWEB.Controllers.API
                 return BadRequest(ex.Message);
             }
         }
+
 
         // DELETE: api/ManufacturesAPI/5
         [HttpDelete("{id}")]

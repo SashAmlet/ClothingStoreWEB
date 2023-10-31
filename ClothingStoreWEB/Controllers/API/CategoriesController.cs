@@ -47,7 +47,7 @@ namespace ClothingStoreWEB.Controllers.API
 
         // PUT: api/CategoriesAPI/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<ActionResult<Category>> PutCategory(int id, Category category)
         {
             if (id != category.Id)
             {
@@ -65,13 +65,13 @@ namespace ClothingStoreWEB.Controllers.API
                 return BadRequest(ex.Message);
             }
 
-            return StatusCode(200);
+            return Ok(category);
         }
 
         // POST: api/CategoriesAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<IActionResult> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace ClothingStoreWEB.Controllers.API
                 {
                     await _context.Categories.AddAsync(category);
                     await _context.SaveChangesAsync();
-                    return StatusCode(200);
+                    return Ok(category);
                 }
                 return BadRequest();
             }

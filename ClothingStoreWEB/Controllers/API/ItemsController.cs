@@ -47,7 +47,7 @@ namespace ClothingStoreWEB.Controllers.API
 
         // PUT: api/Items/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
+        public async Task<ActionResult<Item>> PutItem(int id, Item item)
         {
             if (id != item.Id)
             {
@@ -65,7 +65,7 @@ namespace ClothingStoreWEB.Controllers.API
                 return BadRequest(ex.Message);
             }
 
-            return StatusCode(200);
+            return Ok(item);
         }
 
         // POST: api/Items
@@ -78,7 +78,7 @@ namespace ClothingStoreWEB.Controllers.API
                 {
                     await _context.Items.AddAsync(item);
                     await _context.SaveChangesAsync();
-                    return StatusCode(200);
+                    return Ok(item);
                 }
                 return BadRequest();
             }
