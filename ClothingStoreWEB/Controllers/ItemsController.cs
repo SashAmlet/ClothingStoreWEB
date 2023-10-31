@@ -22,8 +22,8 @@ namespace ClothingStoreWEB.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            var IdentityContext = _context.Items.Include(i => i.Category).Include(i => i.Manufacture);
-            return View(await IdentityContext.ToListAsync());
+            var items = _context.Items.Include(i => i.Category).Include(i => i.Manufacture);
+            return View(await items.ToListAsync());
         }
 
         // GET: Items/Details/5
